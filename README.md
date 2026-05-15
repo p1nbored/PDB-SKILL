@@ -1,9 +1,103 @@
-# What is this?
+# PDB Skill Pack / 总统每日情报简报 制作技能包
 
-This is a President's Daily Brief making skill that can collect news from authoritative media outlets online, analyze and summarize it, and then use that information to create a PDB. Besides, this skill is bilingual in Chinese and English. 
+A pair of Claude Code skills that together produce a 1:1 replica of a
+post-1970s declassified **President's Daily Brief (PDB)** as a bilingual
+(English + Simplified Chinese) PDF, with grayscale CIA-style reference
+maps embedded automatically.
 
-# How to use it?
+> 一套 Claude Code 技能：可联网搜集多家权威媒体的新闻，
+> 经多源校核与中文翻译后，生成与解密版《总统每日情报简报》排版一致的双语 PDF，
+> 并自动配套 CIA 风格的灰度参考地图。
 
-Clone and tell your agent to install.
+---
 
-*Don't forget to tell your agent to change the model.(default model is Claude 4.7 Opus)
+## Repository layout
+
+```
+.
+├── README.md             # this file
+├── .gitignore
+├── skills/               # installable skills (one directory per skill)
+│   ├── cia-map-gen/      # grayscale CIA-style reference map generator
+│   │   ├── SKILL.md      # canonical skill manifest (frontmatter: name, description)
+│   │   ├── README.md
+│   │   ├── HOW_TO_USE.md
+│   │   ├── requirements.txt
+│   │   └── *.py
+│   └── pdb-replica-gen/  # bilingual PDB PDF generator (depends on cia-map-gen)
+│       ├── SKILL.md
+│       ├── README.md
+│       ├── source_guidance.md
+│       ├── requirements.txt
+│       ├── samples/      # pre-built bilingual briefs (JSON)
+│       └── *.py
+└── references/           # development-time reference corpus (NOT required at runtime)
+    ├── README.md
+    ├── index.json
+    ├── *.pdf             # 30 declassified PDB documents
+    ├── screenshots/      # per-page PNG renderings
+    └── map_sample/       # PDB map plates used as aesthetic anchors
+```
+
+Each subdirectory of `skills/` is a self-contained Claude Code skill
+following the standard skill convention: a `SKILL.md` with YAML
+frontmatter (`name`, `description`) plus the code/assets it needs. The
+skills run standalone — `references/` was used **only during
+development** to match the typography and map aesthetics of the
+declassified originals, and can be deleted or ignored after install.
+
+## Skills
+
+| Skill | What it does |
+|-------|--------------|
+| [`skills/cia-map-gen`](skills/cia-map-gen/SKILL.md) | Renders grayscale CIA-PDB-style reference map PNGs from a natural-language geographic prompt. |
+| [`skills/pdb-replica-gen`](skills/pdb-replica-gen/SKILL.md) | Builds a bilingual EN/CN PDB-replica PDF; calls `cia-map-gen` for embedded maps. |
+
+`pdb-replica-gen` invokes `cia-map-gen`, so install both.
+
+## Install
+
+Copy each skill directory into your Claude Code skills directory:
+
+```bash
+# user-level install (recommended)
+mkdir -p ~/.claude/skills
+cp -r skills/cia-map-gen     ~/.claude/skills/
+cp -r skills/pdb-replica-gen ~/.claude/skills/
+
+# install Python dependencies
+pip install --break-system-packages -r ~/.claude/skills/cia-map-gen/requirements.txt
+pip install --break-system-packages -r ~/.claude/skills/pdb-replica-gen/requirements.txt
+```
+
+Or tell your Claude Code agent: *"install the skills in this repo"* — it
+will read `SKILL.md` in each subdirectory and place them correctly.
+
+## Usage
+
+Once installed, trigger the skills in natural language:
+
+- **Map only:** *"make me a CIA-style map of the Horn of Africa"*
+- **Full brief:** *"build me a PDB for today"* or *"生成今天的总统每日情报简报"*
+
+See each skill's own `SKILL.md` for the full trigger phrases, flags,
+and exit codes.
+
+## Model requirement
+
+Chinese translation in `pdb-replica-gen` is pinned to `claude-opus-4-7`.
+If your Claude Code session is running on Sonnet or Haiku, the skill
+will delegate the translation step to an Opus subagent. Don't override
+this — the `source_guidance.md` style rules assume Opus-quality output.
+
+> 中文翻译必须由 `claude-opus-4-7` 完成；若当前会话为 Sonnet/Haiku，
+> 技能会自动委托 Opus 子代理处理翻译步骤。请勿手动降级。
+
+## References (development-only)
+
+The `references/` directory ships the declassified PDB corpus that was
+used **only during development** to design the skills against real
+visual targets. It is **not** copied into `~/.claude/skills/` and the
+skills do not read from it at runtime. Keep it if you want to study
+the originals or extend the skills; delete it freely otherwise. See
+[`references/README.md`](references/README.md) for the corpus index.

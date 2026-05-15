@@ -1,0 +1,20 @@
+# OMC session/state — not part of the skill
+.omc/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Generated artifacts
+**/out/
+**/cache/
+*.cache
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
