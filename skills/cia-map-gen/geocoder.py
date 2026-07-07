@@ -92,12 +92,18 @@ def resolve(prompt: str):
 
     text = _normalize(prompt)
 
-    # Apply aliases (longest first so multi-word aliases win)
+    # Apply aliases (longest first so multi-word aliases win). Whole-word
+    # only: substring replacement would corrupt "russia" via "us" and
+    # "ukraine" via "uk".
     for alias in sorted(COUNTRY_ALIASES.keys(), key=len, reverse=True):
-        if alias in text:
-            text = text.replace(alias, _normalize(COUNTRY_ALIASES[alias]))
+        text = re.sub(r"\b" + re.escape(alias) + r"\b",
+                      _normalize(COUNTRY_ALIASES[alias]), text)
 
-    # Named region lookup (exact phrase match)
+    # Named region lookup (exact phrase match). Prompts may name several
+    # regions ("Red Sea and Persian Gulf") — union every match.
+    region_focus: list[dict] = []
+    region_bboxes: list[tuple[float, float, float, float]] = []
+    seen_ids: set[int] = set()
     for region_name, (focus_list, override_bbox) in NAMED_REGIONS.items():
         if region_name in text:
             focus = [
@@ -105,8 +111,21 @@ def resolve(prompt: str):
                 if any(_normalize(n) == _normalize(c) for n in _feature_names(f) for c in focus_list)
             ]
             if focus:
-                bbox = override_bbox if override_bbox else _pad_bbox(_bbox_of(focus))
-                return focus, bbox, [f["properties"].get("NAME") for f in focus]
+                for f in focus:
+                    if id(f) not in seen_ids:
+                        seen_ids.add(id(f))
+                        region_focus.append(f)
+                region_bboxes.append(
+                    override_bbox if override_bbox else _pad_bbox(_bbox_of(focus))
+                )
+    if region_focus:
+        bbox = (
+            min(b[0] for b in region_bboxes),
+            min(b[1] for b in region_bboxes),
+            max(b[2] for b in region_bboxes),
+            max(b[3] for b in region_bboxes),
+        )
+        return region_focus, bbox, [f["properties"].get("NAME") for f in region_focus]
 
     # Country-name matching
     matched: list[dict] = []

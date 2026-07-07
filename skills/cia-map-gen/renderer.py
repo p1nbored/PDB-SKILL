@@ -424,6 +424,7 @@ def render(
     title: str | None = None,
     topo: bool = False,
     markers: list[tuple[float, float, str, str]] | None = None,
+    pub_seed: str | None = None,
 ) -> str:
     min_lon, min_lat, max_lon, max_lat = bbox
 
@@ -509,6 +510,25 @@ def render(
     )
     ax.add_feature(rivers_feat, linewidth=0.35, zorder=4)
 
+    # Roads and railroads — thin black linework with a Road/Railroad
+    # legend, prominent on the reference plates. Degrade gracefully if
+    # the Natural Earth layers cannot be fetched.
+    try:
+        roads_feat = NaturalEarthFeature(
+            category="cultural", name="roads", scale="10m",
+            facecolor="none", edgecolor="black",
+        )
+        ax.add_feature(roads_feat, linewidth=S.LW_ROAD, zorder=4)
+        rail_feat = NaturalEarthFeature(
+            category="cultural", name="railroads", scale="10m",
+            facecolor="none", edgecolor="black",
+        )
+        ax.add_feature(rail_feat, linewidth=S.LW_RAIL,
+                       linestyle=(0, (2, 1)), zorder=4)
+    except Exception as e:  # noqa: BLE001
+        print(f"[cia-map-gen] roads/railroads unavailable ({e})",
+              file=sys.stderr)
+
     # Borders with dashed-for-disputed handling.
     _draw_boundary_lines(ax, view_bbox)
 
@@ -532,6 +552,11 @@ def render(
     gl.left_labels = False
     gl.xlabel_style = {"size": 6, "color": "black"}
     gl.ylabel_style = {"size": 6, "color": "black"}
+    # Reference plates print bare graticule numerals (26, 30, -22-),
+    # never hemisphere suffixes or degree signs.
+    from matplotlib.ticker import FuncFormatter
+    gl.xformatter = FuncFormatter(lambda v, _pos: f"{abs(v):g}")
+    gl.yformatter = FuncFormatter(lambda v, _pos: f"{abs(v):g}")
 
     # --- Label placement with dedupe + collision avoidance ---
     space = _LabelSpace(S.FIG_WIDTH_IN, S.FIG_HEIGHT_IN,
@@ -687,9 +712,9 @@ def render(
         for lx, ly, ha, va in candidates:
             if space.try_place(lx, ly, name, label_fontsize, ha=ha, va=va):
                 if is_capital:
-                    ax.plot(cx, cy, marker="s", markersize=5,
-                            markerfacecolor="white", markeredgecolor="black",
-                            markeredgewidth=0.9,
+                    # Capitals carry a star symbol on the reference plates.
+                    ax.plot(cx, cy, marker="*", markersize=9,
+                            markerfacecolor="black", markeredgecolor="black",
                             transform=ccrs.PlateCarree(), zorder=11)
                     t = ax.text(lx, ly, name, ha=ha, va=va, color="black",
                                 transform=ccrs.PlateCarree(),
@@ -707,22 +732,25 @@ def render(
                 placed = True
                 break
         if not placed and is_capital:
-            ax.plot(cx, cy, marker="s", markersize=5,
-                    markerfacecolor="white", markeredgecolor="black",
-                    markeredgewidth=0.9,
+            ax.plot(cx, cy, marker="*", markersize=9,
+                    markerfacecolor="black", markeredgecolor="black",
                     transform=ccrs.PlateCarree(), zorder=11)
 
-    # --- Title callout ---
-    if title:
-        ax.text(0.02, 0.965, title, transform=ax.transAxes,
-                ha="left", va="top", fontsize=14, fontweight="bold",
-                family="DejaVu Sans",
-                bbox=dict(facecolor="white", edgecolor="black",
-                          linewidth=0.8, boxstyle="square,pad=0.3"),
-                zorder=12)
+    # --- Legend cartouche (title + Road/Railroad + miles/km scales) ---
+    _draw_cartouche(ax, bbox, title)
 
-    # --- Scale bar cartouche ---
-    _draw_scale_bar(ax, bbox)
+    # --- Boundary disclaimer inside the bottom edge of the frame ---
+    ax.text(0.72, 0.015,
+            "BOUNDARY REPRESENTATION IS\nNOT NECESSARILY AUTHORITATIVE",
+            transform=ax.transAxes, ha="center", va="bottom",
+            color="black", zorder=14, **S.FONT_DISCLAIMER)
+
+    # --- Publication number below the frame's bottom-left corner ---
+    today = _dt.date.today()
+    seed = abs(hash(pub_seed or title or out_path)) % 10000
+    fig.text(ax_rect[0], ax_rect[1] - 0.012,
+             f"62{seed:04d} {today.month}-{today.strftime('%y')}",
+             ha="left", va="top", color="black", **S.FONT_PUBNUM)
 
     fig.savefig(out_path, dpi=S.DPI, facecolor=S.BG)
     plt.close(fig)
@@ -805,8 +833,13 @@ def _nice_distance(max_miles: float) -> int:
     return int(base)
 
 
-def _draw_scale_bar(ax, bbox):
-    """Scale cartouche: bordered white box lower-left, miles + km bars."""
+def _draw_cartouche(ax, bbox, title: str | None = None):
+    """Legend cartouche lower-left inside the frame, per the reference
+    plates: optional bold title, Road/Railroad line samples, then the
+    two-tier miles/kilometers scale bars. Boxed when a title is present
+    (Egypt plate); borderless legend otherwise (Rhodesia plate)."""
+    from matplotlib.patches import Rectangle
+
     min_lon, min_lat, max_lon, max_lat = bbox
     mean_lat = (min_lat + max_lat) / 2.0
     miles_per_deg_lon = 69.172 * max(0.1, math.cos(math.radians(mean_lat)))
@@ -814,65 +847,56 @@ def _draw_scale_bar(ax, bbox):
     target_miles = _nice_distance(map_width_miles * 0.22)
     target_km = _nice_distance(target_miles * 1.60934)
 
-    miles_deg = target_miles / miles_per_deg_lon
-    km_deg = (target_km / 1.60934) / miles_per_deg_lon
-
     dlon = max_lon - min_lon
-    dlat = max_lat - min_lat
+    miles_frac = (target_miles / miles_per_deg_lon) / dlon
+    km_frac = ((target_km / 1.60934) / miles_per_deg_lon) / dlon
 
-    inner_x0 = min_lon + dlon * S.SCALE_ANCHOR[0]
-    inner_y0 = min_lat + dlat * S.SCALE_ANCHOR[1]
-    bar_h = dlat * 0.006
-    gap = dlat * 0.020
+    x0 = S.SCALE_ANCHOR[0] + 0.012
+    y = S.SCALE_ANCHOR[1] + 0.012
+    sample_w = 0.055
+    row_h = 0.022
+    z = 15
 
-    bar_width = max(miles_deg, km_deg)
-    cart_pad_x = dlon * 0.020
-    cart_pad_y = dlat * 0.014
-    cart_x0 = inner_x0 - cart_pad_x
-    cart_y0 = inner_y0 - bar_h - dlat * 0.012 - cart_pad_y
-    cart_x1 = inner_x0 + bar_width + cart_pad_x + dlon * 0.09
-    cart_y1 = inner_y0 + gap + bar_h + dlat * 0.012 + cart_pad_y
-    from matplotlib.patches import Rectangle
+    def _bar(yy: float, frac: float, label: str) -> None:
+        ax.plot([x0, x0 + frac], [yy, yy], color="black",
+                linewidth=S.LW_SCALE, solid_capstyle="butt",
+                transform=ax.transAxes, zorder=z)
+        for xx in (x0, x0 + frac):
+            ax.plot([xx, xx], [yy - 0.004, yy + 0.004], color="black",
+                    linewidth=S.LW_SCALE, transform=ax.transAxes, zorder=z)
+        ax.text(x0 - 0.006, yy, "0", ha="right", va="center",
+                color="black", transform=ax.transAxes, zorder=z,
+                **S.FONT_SCALE)
+        ax.text(x0 + frac + 0.008, yy, label, ha="left", va="center",
+                color="black", transform=ax.transAxes, zorder=z,
+                **S.FONT_SCALE)
+
+    # Rows from the bottom up: km bar, miles bar, Railroad, Road, title.
+    _bar(y, km_frac, f"{target_km} KILOMETERS")
+    _bar(y + row_h, miles_frac, f"{target_miles} MILES")
+
+    ley = y + row_h * 2.1
+    ax.plot([x0, x0 + sample_w], [ley, ley], color="black",
+            linewidth=S.LW_RAIL, linestyle=(0, (2, 1)),
+            transform=ax.transAxes, zorder=z)
+    ax.text(x0 + sample_w + 0.010, ley, "Railroad", ha="left", va="center",
+            color="black", transform=ax.transAxes, zorder=z, **S.FONT_LEGEND)
+    ley2 = ley + row_h
+    ax.plot([x0, x0 + sample_w], [ley2, ley2], color="black",
+            linewidth=S.LW_ROAD + 0.25, transform=ax.transAxes, zorder=z)
+    ax.text(x0 + sample_w + 0.010, ley2, "Road", ha="left", va="center",
+            color="black", transform=ax.transAxes, zorder=z, **S.FONT_LEGEND)
+
+    top = ley2 + row_h
+    if title:
+        ax.text(x0, top + 0.012, title, ha="left", va="bottom",
+                color="black", transform=ax.transAxes, zorder=z,
+                **S.FONT_TITLE)
+        top += 0.055
+
+    box_w = max(miles_frac, km_frac, sample_w) + 0.19
     ax.add_patch(Rectangle(
-        (cart_x0, cart_y0), cart_x1 - cart_x0, cart_y1 - cart_y0,
-        facecolor="white", edgecolor="black", linewidth=0.7,
-        transform=ccrs.PlateCarree(),
-        zorder=14,
+        (x0 - 0.022, y - 0.020), box_w, top - y + 0.038,
+        facecolor="white", edgecolor="black" if title else "none",
+        linewidth=0.8, transform=ax.transAxes, zorder=14,
     ))
-
-    scale_zorder = 15
-
-    # Miles bar (top)
-    ax.plot([inner_x0, inner_x0 + miles_deg],
-            [inner_y0 + gap, inner_y0 + gap],
-            color="black", linewidth=S.LW_SCALE, solid_capstyle="butt",
-            transform=ccrs.PlateCarree(), zorder=scale_zorder)
-    ax.plot([inner_x0, inner_x0],
-            [inner_y0 + gap - bar_h, inner_y0 + gap + bar_h],
-            color="black", linewidth=S.LW_SCALE,
-            transform=ccrs.PlateCarree(), zorder=scale_zorder)
-    ax.plot([inner_x0 + miles_deg, inner_x0 + miles_deg],
-            [inner_y0 + gap - bar_h, inner_y0 + gap + bar_h],
-            color="black", linewidth=S.LW_SCALE,
-            transform=ccrs.PlateCarree(), zorder=scale_zorder)
-    ax.text(inner_x0 + miles_deg + dlon * 0.008, inner_y0 + gap,
-            f"{target_miles} MILES", ha="left", va="center",
-            color="black", transform=ccrs.PlateCarree(),
-            zorder=scale_zorder, **S.FONT_SCALE)
-
-    # Km bar (bottom)
-    ax.plot([inner_x0, inner_x0 + km_deg], [inner_y0, inner_y0],
-            color="black", linewidth=S.LW_SCALE, solid_capstyle="butt",
-            transform=ccrs.PlateCarree(), zorder=scale_zorder)
-    ax.plot([inner_x0, inner_x0],
-            [inner_y0 - bar_h, inner_y0 + bar_h],
-            color="black", linewidth=S.LW_SCALE,
-            transform=ccrs.PlateCarree(), zorder=scale_zorder)
-    ax.plot([inner_x0 + km_deg, inner_x0 + km_deg],
-            [inner_y0 - bar_h, inner_y0 + bar_h],
-            color="black", linewidth=S.LW_SCALE,
-            transform=ccrs.PlateCarree(), zorder=scale_zorder)
-    ax.text(inner_x0 + km_deg + dlon * 0.008, inner_y0,
-            f"{target_km} KILOMETERS", ha="left", va="center",
-            color="black", transform=ccrs.PlateCarree(),
-            zorder=scale_zorder, **S.FONT_SCALE)

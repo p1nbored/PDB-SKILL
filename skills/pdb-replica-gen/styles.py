@@ -15,23 +15,34 @@ RIGHT_MARGIN = 1.0 * inch
 TOP_MARGIN = 1.0 * inch
 BOTTOM_MARGIN = 0.9 * inch
 
-# Font family names used in the PDF
+# Font family names used in the PDF.
+# Typography mapping derived from the 1971-76 reference PDBs:
+#   serif roman/italic (Garamond-class)  -> Times-Roman / Times-Italic
+#   typewriter roman/italic (Courier)    -> Courier / Courier-Oblique
+#   square gothic display heads          -> Courier-Bold (closest built-in)
+#   modern sans release stamps (artifact)-> Helvetica
 BODY_EN = "Courier"
 BODY_EN_BOLD = "Courier-Bold"
+BODY_EN_ITALIC = "Courier-Oblique"
 BODY_CN = "PDB-CN"
 BODY_CN_BOLD = "PDB-CN-Bold"
-TITLE_FONT = "Helvetica-Bold"
+SERIF = "Times-Roman"
+SERIF_ITALIC = "Times-Italic"
+DISPLAY = "Courier-Bold"
 
 BODY_SIZE = 10.5
 BODY_LEADING = 13.5
-TITLE_SIZE = 11.5
-COVER_TITLE_SIZE = 28
-COVER_DATE_SIZE = 12
+DISPLAY_SIZE = 14
+COVER_TITLE_SIZE = 30
+COVER_DATE_SIZE = 15
 FOOTER_SIZE = 8
-BANNER_SIZE = 8
-COMPARTMENT_SIZE = 7.5
+BANNER_SIZE = 12.5
+DECLASS_SIZE = 7
+STAMP_SIZE = 7.5
 
 CJK_CANDIDATES = [
+    ("C:/Windows/Fonts/simsun.ttc", "C:/Windows/Fonts/simhei.ttf"),
+    ("C:/Windows/Fonts/msyh.ttc", "C:/Windows/Fonts/msyhbd.ttc"),
     ("/mnt/c/Windows/Fonts/simsun.ttc", "/mnt/c/Windows/Fonts/simhei.ttf"),
     ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
      "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc"),

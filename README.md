@@ -1,12 +1,14 @@
 # PDB Skill Pack / 总统每日情报简报 制作技能包
 
 A pair of Claude Code skills that together produce a 1:1 replica of a
-post-1970s declassified **President's Daily Brief (PDB)** as a bilingual
-(English + Simplified Chinese) PDF, with grayscale CIA-style reference
-maps embedded automatically.
+1970s declassified **President's Daily Brief (PDB)** as a bilingual
+(English + Simplified Chinese) PDF plus a Markdown rendition — each
+with a map index — with grayscale CIA-style reference maps embedded
+automatically.
 
 > 一套 Claude Code 技能：可联网搜集多家权威媒体的新闻，
-> 经多源校核与中文翻译后，生成与解密版《总统每日情报简报》排版一致的双语 PDF，
+> 经多源校核与中文翻译后，生成与解密版《总统每日情报简报》排版一致的双语
+> PDF 与 Markdown 双格式输出（均含地图索引），
 > 并自动配套 CIA 风格的灰度参考地图。
 
 ---
@@ -50,8 +52,8 @@ declassified originals, and can be deleted or ignored after install.
 
 | Skill | What it does |
 |-------|--------------|
-| [`skills/cia-map-gen`](skills/cia-map-gen/SKILL.md) | Renders grayscale CIA-PDB-style reference map PNGs from a natural-language geographic prompt. |
-| [`skills/pdb-replica-gen`](skills/pdb-replica-gen/SKILL.md) | Builds a bilingual EN/CN PDB-replica PDF; calls `cia-map-gen` for embedded maps. |
+| [`skills/cia-map-gen`](skills/cia-map-gen/SKILL.md) | Renders grayscale CIA-PDB-style reference map PNGs (legend cartouche, roads/railroads, star capitals, publication number) from a natural-language geographic prompt. |
+| [`skills/pdb-replica-gen`](skills/pdb-replica-gen/SKILL.md) | Builds a bilingual EN/CN PDB replica as PDF + Markdown, each with a map index; calls `cia-map-gen` for embedded maps. |
 
 `pdb-replica-gen` invokes `cia-map-gen`, so install both.
 
@@ -68,10 +70,23 @@ cp -r skills/pdb-replica-gen ~/.claude/skills/
 # install Python dependencies
 pip install --break-system-packages -r ~/.claude/skills/cia-map-gen/requirements.txt
 pip install --break-system-packages -r ~/.claude/skills/pdb-replica-gen/requirements.txt
+
+# choose where generated briefs land + which format is primary (persisted)
+python3 ~/.claude/skills/pdb-replica-gen/pdb_gen.py \
+    --set-output-dir ~/pdb-output --set-primary-format pdf
 ```
 
 Or tell your Claude Code agent: *"install the skills in this repo"* — it
 will read `SKILL.md` in each subdirectory and place them correctly.
+During an agent-driven install, the agent pops up a selectable prompt
+asking (1) where briefs should land (`~/pdb-output`,
+`~/Documents/PDB-Briefs`, `./pdb-output`, or a custom path typed under
+"Other" — e.g. an Obsidian vault folder) and (2) whether **PDF** or
+**Markdown** is the primary output format. Both answers persist via
+`--set-output-dir` / `--set-primary-format`. Markdown-primary output
+is Obsidian-flavored (frontmatter properties, wikilink anchors,
+callout lead-ins, `![[map.png]]` embeds) so the brief plus its `maps/`
+folder can be dropped straight into a vault.
 
 ## Usage
 
@@ -82,16 +97,6 @@ Once installed, trigger the skills in natural language:
 
 See each skill's own `SKILL.md` for the full trigger phrases, flags,
 and exit codes.
-
-## Model requirement
-
-Chinese translation in `pdb-replica-gen` is pinned to `claude-opus-4-7`.
-If your Claude Code session is running on Sonnet or Haiku, the skill
-will delegate the translation step to an Opus subagent. Don't override
-this — the `source_guidance.md` style rules assume Opus-quality output.
-
-> 中文翻译必须由 `claude-opus-4-7` 完成；若当前会话为 Sonnet/Haiku，
-> 技能会自动委托 Opus 子代理处理翻译步骤。请勿手动降级。
 
 ## References (development-only)
 

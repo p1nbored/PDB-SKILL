@@ -22,8 +22,15 @@
         "布伦特原油于4月20日收于每桶九十五美元以上，单日涨幅达百分之五至七，主因即封锁声明与货轮扣押事件。公开报道与船舶跟踪数据显示，亚洲炼厂已动用战略储备以覆盖四月装载量，多家依赖海湾航线的欧洲保险商已暂停承保新的霍尔木兹过境业务。",
         "我们判断，若战事如期重启，伊朗更可能升级对航运的非对称骚扰，而非维持正式封锁，并极有可能在任何动能反击中同步加大对海湾能源设施的无人机与导弹压力。“史诗怒火”行动的政权更迭论调并未松动，德黑兰愈发明显地在为长期对抗而非体面协议做国内舆论准备。"
       ],
-      "sources": ["CNN", "Al Jazeera", "Fortune", "Jerusalem Post"],
-      "compartments": ["50X1", "NOFORN"],
+      "sources": [
+        "CNN",
+        "Al Jazeera",
+        "Fortune",
+        "Jerusalem Post"
+      ],
+      "compartments": [
+        "25X1"
+      ],
       "map_prompt": "Iran Persian Gulf Strait of Hormuz",
       "map_title": "THE STRAIT OF HORMUZ"
     },
@@ -45,8 +52,15 @@
         "莫斯科于4月17日隐晦威胁将对驻扎有被用于打击其炼厂和出口节点的远程系统的欧洲国家实施报复，我们研判该表述系在为混合行动——纵火、铁路破坏或海底电缆事件——作铺垫，而非常规军事升级。",
         "情报界评估，石油终端遭袭很可能迫使俄罗斯要么持续削减炼油，要么进一步依赖影子船队转运，两种情形均将在2026预算周期前压缩其财政空间。乌方行动的上限在于其国产远程无人机的弹药储备深度，若要在夏末之后维持打击节奏，很可能需要西方再供应巡航导弹。"
       ],
-      "sources": ["EMPR Media", "Al Jazeera", "Euronews", "ISW"],
-      "compartments": ["50X1", "NOFORN"]
+      "sources": [
+        "EMPR Media",
+        "Al Jazeera",
+        "Euronews",
+        "ISW"
+      ],
+      "compartments": [
+        "25X1"
+      ]
     },
     {
       "title_en": "KOREA: PYONGYANG COUPLES NEW MISSILE TESTS TO BEIJING OUTREACH",
@@ -66,8 +80,15 @@
         "情报界评估此次“试射加外交”的组合系有意为之：平壤似在华盛顿注意力被伊朗议题牵制之际，同时展示作战就绪与恢复后的北京庇护。首尔的政治带宽亦因2025年9月至2026年1月的民间无人机越境事件持续发酵而受限，李大统领已于4月6日就此公开表示遗憾。",
         "我们判断未来两周内很可能再发生一次试射，可能涉及固体燃料中远程弹道导弹或潜射巡航导弹，意在美朝任何对话重启前强化一个稳定拥核朝鲜的叙事。"
       ],
-      "sources": ["Al Jazeera", "NPR", "NK News", "AEI"],
-      "compartments": ["50X1"],
+      "sources": [
+        "Al Jazeera",
+        "NPR",
+        "NK News",
+        "AEI"
+      ],
+      "compartments": [
+        "25X1"
+      ],
       "map_prompt": "Korean Peninsula",
       "map_title": "KOREAN PENINSULA"
     },
@@ -89,8 +110,15 @@
         "4月19日当周公布的劳动部调查显示，愿赴大陆就业的适龄台湾民众比例降至历史最低的1.6%，低于此前几年虽为个位数但明显更高的水平。公开报道显示惠台措施出台后，台湾中小企业的咨询量未见明显上升。",
         "情报界评估统战路线将持续，但其政治收益正在递减；北京很可能在夏季之前将进一步经济示好与跨海峡灰色地带活动加强相结合，包括扩大海警登检与防空识别区扰动，以向台方施加持续不接触的代价。"
       ],
-      "sources": ["Bloomberg", "Taipei Times", "NBC News", "AEI"],
-      "compartments": ["50X1"]
+      "sources": [
+        "Bloomberg",
+        "Taipei Times",
+        "NBC News",
+        "AEI"
+      ],
+      "compartments": [
+        "25X1"
+      ]
     },
     {
       "title_en": "SUDAN: WAR ENTERS FOURTH YEAR WITH CONSOLIDATED PARTITION",
@@ -110,8 +138,15 @@
         "4月14日德国在柏林召集非盟、法国、欧盟、英国及美国以重启斡旋；美国国务院同步宣布新一轮制裁指定并呼吁人道停火。两条轨道均未使交战方松动，双方仍通过第三方渠道获得外部物资支持。",
         "情报界评估该冲突2026年全年很可能维持战略僵持，双方将再武装而非谈判。近期更可能的转折是达尔富尔人道通道进一步崩塌，从而对乍得与南苏丹形成压力，并可能迫使安理会议题重启。"
       ],
-      "sources": ["Al Jazeera", "Human Rights Watch", "UN News", "US State Department"],
-      "compartments": ["50X1", "NOFORN"]
+      "sources": [
+        "Al Jazeera",
+        "Human Rights Watch",
+        "UN News",
+        "US State Department"
+      ],
+      "compartments": [
+        "25X1"
+      ]
     }
   ],
   "notes": [

@@ -22,8 +22,16 @@
         "英国与法国将于4月22日在伦敦召集逾三十国军事规划官员，协调重启海峡的方案，该海峡已实际封闭近两个月。全球约百分之二十的原油与液化天然气通常经霍尔木兹运输；亚洲炼厂仍在动用战略储备，多家欧洲承保商对新过境业务仍处停保状态。",
         "情报界评估，此次延长系来自巴基斯坦、海湾伙伴及能源进口盟国的压力所致，而非德黑兰在核心的浓缩期限与解除制裁议题上有任何实质让步。我们判断5月中旬前达成持久协议的概率较低；若被扣货轮在本周末前未获释，则在伦敦海峡协调会议前后伊方可能采取海上非对称报复，重启动能交火的概率为中至高。"
       ],
-      "sources": ["NPR", "CNN", "CNBC", "Al Jazeera", "Euronews"],
-      "compartments": ["50X1", "NOFORN"],
+      "sources": [
+        "NPR",
+        "CNN",
+        "CNBC",
+        "Al Jazeera",
+        "Euronews"
+      ],
+      "compartments": [
+        "25X1"
+      ],
       "map_prompt": "Iran Persian Gulf Strait of Hormuz",
       "map_title": "THE STRAIT OF HORMUZ"
     },
@@ -45,8 +53,16 @@
         "泽连斯基总统公开拒绝从顿涅茨克与卢甘斯克争议地段撤军的选项，称此举构成战略失败。乌方官员同步敦促欧洲伙伴加速构建欧洲级弹道导弹防御层，理由是俄方持续威胁要打击为乌方远程打击行动提供平台的欧洲东道国。",
         "情报界评估，俄方防空杀伤链遭蚕食在战略上更具后果：既降低乌方未来远程打击的成本，又使俄方对炼油与石油出口设施的保护更加吃力。我们判断前线至5月仍将基本胶着，俄方边际推进将继续以当前难以为继的兵员损耗换取。"
       ],
-      "sources": ["Reuters", "Kyiv Independent", "Ukrinform", "Al Jazeera", "Russia Matters"],
-      "compartments": ["50X1", "NOFORN"]
+      "sources": [
+        "Reuters",
+        "Kyiv Independent",
+        "Ukrinform",
+        "Al Jazeera",
+        "Russia Matters"
+      ],
+      "compartments": [
+        "25X1"
+      ]
     },
     {
       "title_en": "KOREA: HWASONG-11 RA SALVOS VALIDATE CLUSTER WARHEAD",
@@ -66,8 +82,16 @@
         "平壤继续利用4月9日至10日王毅外长访朝（2019年以来最高级别中朝外交接触）所提供的庇护空间。公开报道与国际原子能机构表态持续指出疑似新铀浓缩设施迹象，俄方与中方则在两用贸易领域共同助朝规避联合国旧制裁。",
         "情报界评估，平壤有意将已演示的战术打击深度与外交隔离相结合，以在任何美朝对话重启前强化其谈判地位。我们判断未来两周内很可能再发生一次试射，且具有相当概率涉及固体燃料中远程弹道导弹或潜射巡航导弹，意在将威慑信号扩展至朝鲜半岛战区之外。"
       ],
-      "sources": ["NK News", "Euronews", "PBS", "C4Defence", "NBC News"],
-      "compartments": ["50X1"],
+      "sources": [
+        "NK News",
+        "Euronews",
+        "PBS",
+        "C4Defence",
+        "NBC News"
+      ],
+      "compartments": [
+        "25X1"
+      ],
       "map_prompt": "North Korea South Korea",
       "map_title": "KOREAN PENINSULA"
     },
@@ -89,8 +113,15 @@
         "4月19日当周公布的民调显示愿赴大陆就业的适龄台湾民众比例创历史新低，仅为1.6%，台湾中小企业就新措施的咨询量亦有限。台北坚持任何围绕该套措施的实质性对接必须由民选的赖政府主导，而北京则继续拒绝承认其为对话方。",
         "情报界评估，航母过航是政治惠台方案的动能配套：北京意在显示持续不接触的代价将与灰色地带节奏同步上升。我们判断解放军海军很可能在5月赖就职周年期间维持较高的过境与中线扰动强度，且具有中等概率举行未预告的大规模演习，以回应美台防务宣告为定性。"
       ],
-      "sources": ["Stars and Stripes", "Focus Taiwan", "AEI", "CNBC"],
-      "compartments": ["50X1"],
+      "sources": [
+        "Stars and Stripes",
+        "Focus Taiwan",
+        "AEI",
+        "CNBC"
+      ],
+      "compartments": [
+        "25X1"
+      ],
       "map_prompt": "Taiwan Strait",
       "map_title": "TAIWAN STRAIT"
     },
@@ -112,8 +143,16 @@
         "据美联社及联合国机构统计，约900万苏丹人国内流离失所，另有450万人逃往邻国；累计死亡人数超过15万。由美、沙、埃、阿联酋组成的四方倡议自2025年9月提出框架以来未取得进展；4月14日非盟、欧盟、法国、英国与美国在柏林的会议尚未转化为对交战任一方的实质压力。",
         "情报界评估，该冲突2026年全年将维持战略僵持，双方再武装的速度快于损耗。我们判断近期更可能的转折是达尔富尔与科尔多凡人道通道进一步崩塌，从而对乍得与南苏丹形成叠加压力，并可能在8月休会前迫使该议题重回安理会议程。"
       ],
-      "sources": ["Al Jazeera", "Associated Press", "NPR", "Soufan Center", "CFR"],
-      "compartments": ["50X1", "NOFORN"]
+      "sources": [
+        "Al Jazeera",
+        "Associated Press",
+        "NPR",
+        "Soufan Center",
+        "CFR"
+      ],
+      "compartments": [
+        "25X1"
+      ]
     }
   ],
   "notes": [

@@ -80,4 +80,38 @@ NAMED_REGIONS = {
         ["Vietnam", "Cambodia", "Laos", "Thailand", "Myanmar"],
         None,
     ),
+    "korean peninsula": (
+        ["North Korea", "South Korea"],
+        (122, 32.5, 132.5, 43.5),
+    ),
+    "red sea": (
+        ["Egypt", "Saudi Arabia", "Sudan", "Eritrea", "Yemen", "Djibouti"],
+        (29, 9, 48, 32),
+    ),
+    "persian gulf": (
+        ["Iran", "Iraq", "Kuwait", "Saudi Arabia", "Bahrain", "Qatar",
+         "United Arab Emirates", "Oman"],
+        (43, 21, 61, 34),
+    ),
+    "taiwan strait": (
+        ["Taiwan", "China"],
+        (112, 18, 126, 28),
+    ),
+    "south china sea": (
+        ["China", "Vietnam", "Philippines", "Malaysia", "Brunei", "Taiwan"],
+        (104, 2, 124, 24),
+    ),
+    "sahel": (
+        ["Mauritania", "Mali", "Niger", "Chad", "Burkina Faso", "Sudan",
+         "Senegal"],
+        None,
+    ),
+    "andean ridge": (
+        ["Venezuela", "Colombia", "Ecuador", "Peru", "Bolivia"],
+        None,
+    ),
+    "eastern europe": (
+        ["Ukraine", "Belarus", "Moldova", "Poland", "Romania"],
+        (17, 43, 42, 58),
+    ),
 }

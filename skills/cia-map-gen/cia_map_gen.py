@@ -96,6 +96,7 @@ def main(argv=None) -> int:
         title=args.title,
         topo=args.topo,
         markers=markers,
+        pub_seed=args.prompt,
     )
     print(out)
     print(f"focus: {', '.join(names)}", file=sys.stderr)

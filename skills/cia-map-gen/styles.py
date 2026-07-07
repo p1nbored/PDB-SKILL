@@ -46,6 +46,16 @@ FONT_MARKER = {"family": "DejaVu Sans", "weight": "bold", "size": 8}
 FONT_DECLASS = {"family": "DejaVu Sans", "weight": "normal", "size": 5.5}
 FONT_SCALE = {"family": "DejaVu Sans", "weight": "normal",
               "size": 6.5}
+# Legend cartouche (Road/Railroad samples + title), publication number
+# under the frame, and the boundary disclaimer — all present on the
+# reference plates (e.g. 620402 9-76 Rhodesia, 620375 8-76 Egypt).
+FONT_TITLE = {"family": "DejaVu Sans", "weight": "bold", "size": 13}
+FONT_LEGEND = {"family": "DejaVu Sans", "weight": "normal", "size": 6.5}
+FONT_PUBNUM = {"family": "DejaVu Sans", "weight": "normal", "size": 5}
+FONT_DISCLAIMER = {"family": "DejaVu Sans", "weight": "normal", "size": 4.5}
+
+LW_ROAD = 0.3
+LW_RAIL = 0.45
 
 # Scale bar position (axes fraction, lower-left anchor)
 SCALE_ANCHOR = (0.03, 0.04)

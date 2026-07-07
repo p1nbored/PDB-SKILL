@@ -26,7 +26,9 @@
         "CBS News 2026-04-17",
         "CNN 2026-04-16"
       ],
-      "compartments": ["50X1", "NOFORN"],
+      "compartments": [
+        "25X1"
+      ],
       "map_prompt": "Israel Lebanon Syria",
       "map_title": "LEBANON — Ceasefire Line"
     },
@@ -52,8 +54,10 @@
         "Reuters 2026-04-17",
         "Russia Matters 2026-04-08"
       ],
-      "compartments": ["50X1"],
-      "map_prompt": "Ukraine and Russia",
+      "compartments": [
+        "25X1"
+      ],
+      "map_prompt": "Eastern Europe Ukraine",
       "map_title": "UKRAINE — Strike Corridors"
     },
     {
@@ -78,7 +82,9 @@
         "Army Recognition 2026-04-13",
         "Al Jazeera 2026-01-01"
       ],
-      "compartments": ["50X1", "NOFORN"],
+      "compartments": [
+        "25X1"
+      ],
       "map_prompt": "Taiwan and China",
       "map_title": "TAIWAN STRAIT"
     },
@@ -104,7 +110,9 @@
         "Military.com 2026-04-14",
         "The Defense Post 2026-04-14"
       ],
-      "compartments": ["50X1"],
+      "compartments": [
+        "25X1"
+      ],
       "map_prompt": "Korean Peninsula",
       "map_title": "KOREAN PENINSULA"
     },
@@ -130,7 +138,9 @@
         "Fortune 2026-04-16",
         "EIA Short-Term Energy Outlook"
       ],
-      "compartments": ["50X1"],
+      "compartments": [
+        "25X1"
+      ],
       "map_prompt": "Red Sea and Persian Gulf",
       "map_title": "MARITIME ENERGY CORRIDORS"
     }

@@ -171,14 +171,6 @@ Every article in the brief MUST clear three gates before it ships:
 
 ## Chinese translation rules
 - Simplified Chinese.
-- **Model requirement:** All `title_cn`, `summary_cn`, `body_cn`,
-  and `text_cn` strings MUST be produced using the `claude-opus-4-7`
-  model. If Claude is currently running on a smaller model, it MUST
-  either (a) escalate by delegating the translation step to an
-  `executor` agent with `model=opus`, or (b) spawn a
-  `Task(subagent_type="oh-my-claudecode:executor", model="opus", ...)`
-  whose sole job is bilingual translation of the already-drafted
-  English content. Do not degrade to Sonnet or Haiku for CN output.
 - Match paragraph boundaries 1:1 with the English — for every English
   paragraph there is exactly one Chinese paragraph.
 - Preserve paragraph *lengths* in rough proportion. A 4-sentence

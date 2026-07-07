@@ -44,7 +44,7 @@ Subsequent runs are fully offline.
 | `--prompt "..."` | **Required.** Geographic description (country, region, or historical name). |
 | `--out PATH` | Output PNG path. Default: `./cia_map_<slug>_<timestamp>.png`. |
 | `--topo` | Overlay grayscale shaded relief inside focus countries. |
-| `--title "..."` | Boxed title rendered top-left of the frame. |
+| `--title "..."` | Bold title inside the boxed legend cartouche (Egypt-plate style). |
 | `--no-header` | Omit the "Declassified in Part…" header/footer strings. |
 | `--marker LON,LAT,LABEL[,STYLE]` | Place a custom marker. Style ∈ {star, triangle, diamond, square, dot}. Repeatable. |
 | `--download` | Pre-cache Natural Earth data and exit. |
@@ -84,13 +84,18 @@ Subsequent runs are fully offline.
 - Cartopy `PlateCarree` projection, 8.5×11 in portrait, 200 DPI PNG.
 - 10 m Natural Earth vector data: coastlines, country borders (solid for
   international, **dashed for disputed/indefinite boundaries**), rivers,
-  lakes, populated places.
+  lakes, roads, railroads, populated places.
 - Grayscale shaded relief clipped to the focus country (when `--topo`).
-- Fine dotted lat/lon gridlines with coordinate labels on the top & right
-  margins (e.g. `30°E`).
+- Fine dotted lat/lon gridlines with bare graticule numerals on the top
+  & right margins (e.g. `30`), as on the reference plates.
 - Italic serif marine labels, bold condensed country labels (larger for
-  focus country), sans-serif city labels with scalerank-based culling.
-- Scale cartouche (miles + kilometers) in the lower-left.
+  focus country), sans-serif city labels with scalerank-based culling,
+  star symbols for capitals.
+- Legend cartouche in the lower-left: optional bold title, Road/Railroad
+  line samples, and miles + kilometers scale bars.
+- "BOUNDARY REPRESENTATION IS NOT NECESSARILY AUTHORITATIVE" disclaimer
+  inside the frame and a CIA-style publication number below its
+  bottom-left corner (e.g. `620402 9-76`).
 - "CIA-RDP…" declassification header/footer (unless `--no-header`).
 - Custom markers with boxed labels.
 
@@ -114,8 +119,9 @@ cia-map-gen/
 
 - **Historical borders** are approximated via modern equivalents. See
   `aliases.py` for substitutions (e.g. Rhodesia → Zimbabwe).
-- **No road or railroad network** — Natural Earth does not publish them at
-  this scale, and the generator does not fabricate data.
+- **Roads/railroads** come from Natural Earth 10 m (fetched and cached by
+  cartopy on first use); coverage reflects the modern network, not the
+  period one.
 - **Very small dependencies** may be unlabeled to avoid clutter.
 - **Shaded relief** uses Natural Earth's 50 m SR plate, which is a global
   grayscale hillshade raster — it is the DEM itself, not a stylized

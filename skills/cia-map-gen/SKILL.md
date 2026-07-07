@@ -1,6 +1,6 @@
 ---
 name: cia-map-gen
-description: Generate CIA-style declassified reference map PNGs from a natural-language geographic prompt. Use when the user asks for a "CIA map", "declassified map", "reference map image", or "make a map of <place>". The output is a grayscale matplotlib PNG with country labels, city dots, italic sea labels, a scale bar, and an optional declassification header/footer matching the style of CIA PDB-era map plates.
+description: Generate CIA-style declassified reference map PNGs from a natural-language geographic prompt. Use when the user asks for a "CIA map", "declassified map", "reference map image", or "make a map of <place>". The output is a grayscale matplotlib PNG matching the 1970s CIA PDB map plates - country labels, city dots and star capitals, road/railroad linework, italic sea labels, a legend cartouche with Road/Railroad samples and miles+km scale bars, a boundary disclaimer, a publication number under the frame, and an optional declassification header/footer.
 ---
 
 # CIA-Style Map Generator
@@ -50,8 +50,13 @@ python3 ~/.claude/skills/cia-map-gen/cia_map_gen.py \
    small historical-alias + named-region dictionary.
 2. **Compute bbox.** Union of matched country geometries, padded 15%.
 3. **Render.** `renderer.py` draws grayscale countries, lakes, rivers,
-   italic marine labels, city dots, scale bar (miles + km), black frame,
-   and optional CIA-RDP declassification header/footer.
+   roads and railroads, italic marine labels, city dots with star
+   capitals, a legend cartouche (optional bold title, Road/Railroad
+   line samples, miles + km scale bars), the "BOUNDARY REPRESENTATION
+   IS NOT NECESSARILY AUTHORITATIVE" disclaimer, a CIA-style
+   publication number below the frame (e.g. "620402 9-76"), a black
+   frame with bare graticule numerals, and an optional CIA-RDP
+   declassification header/footer.
 4. **Output.** PNG at 200 DPI, portrait, ~8.5×11 in.
 
 ## Exit codes
@@ -62,7 +67,8 @@ python3 ~/.claude/skills/cia-map-gen/cia_map_gen.py \
 ## Flags
 - `--prompt` (required) free-form geographic description.
 - `--out` output PNG path. Default: `./cia_map_<slug>_<ts>.png`.
-- `--title` optional boxed title rendered top-left of the frame.
+- `--title` optional bold title inside the legend cartouche (boxed,
+  as on the Egypt reference plate).
 - `--no-header` omit the declassification header/footer strings.
 - `--download` pre-cache Natural Earth data and exit.
 
@@ -81,9 +87,8 @@ python3 ~/.claude/skills/cia-map-gen/cia_map_gen.py \
 ```
 
 ## Limitations
-- No road/railroad network data (Natural Earth does not include them at
-  1:50m detail); the legend in the CIA originals is therefore omitted
-  rather than fabricated.
+- Roads/railroads come from Natural Earth 10m (cartopy fetches and
+  caches them on first use); coverage is modern, not period.
 - Historical borders are approximated via modern equivalents; see
   `aliases.py` for the substitutions applied (Rhodesia→Zimbabwe, etc.).
 - Very small countries/dependencies may be unlabeled to avoid clutter.

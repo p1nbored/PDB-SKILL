@@ -14,7 +14,9 @@ class Article:
     body_en: list[str]
     body_cn: list[str]
     sources: list[str] = field(default_factory=list)
-    compartments: list[str] = field(default_factory=lambda: ["50X1"])
+    # Era-correct declassification-exemption marker (post-1970s PDBs carry
+    # 25X1 stamps; 50X1 belongs to the 1960s checklist era).
+    compartments: list[str] = field(default_factory=lambda: ["25X1"])
     map_prompt: str | None = None
     map_title: str | None = None
     # One-sentence pull-quote summary rendered in the narrow left column.
@@ -46,6 +48,8 @@ class Brief:
     articles: list[Article]
     volume_marker: str = "CIA/DI"
     classification: str = "TOP SECRET"
+    # Distribution copy number stamped on the cover of the originals.
+    copy_number: str = "2"
     declass_header: str = (
         "Declassified in Part - Sanitized Copy Approved for Release 2026/04/18 "
         ": CIA-RDP99T00000A000200010001-0"

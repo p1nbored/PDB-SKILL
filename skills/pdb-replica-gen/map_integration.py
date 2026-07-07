@@ -1,22 +1,34 @@
 """Invoke the cia-map-gen skill to produce reference maps."""
 from __future__ import annotations
 
-import os
-import shlex
 import subprocess
+import sys
 from pathlib import Path
 
-CIA_MAP_GEN = Path.home() / ".claude/skills/cia-map-gen/cia_map_gen.py"
+# Sibling checkout first (repo layout: skills/cia-map-gen), then the
+# installed location under ~/.claude/skills.
+_CANDIDATES = [
+    Path(__file__).resolve().parent.parent / "cia-map-gen" / "cia_map_gen.py",
+    Path.home() / ".claude/skills/cia-map-gen/cia_map_gen.py",
+]
+
+
+def _find_cia_map_gen() -> Path | None:
+    for cand in _CANDIDATES:
+        if cand.exists():
+            return cand
+    return None
 
 
 def generate_map(prompt: str, out_path: Path, title: str | None = None,
                  no_header: bool = True) -> Path | None:
     """Run cia-map-gen and return the PNG path, or None on failure."""
-    if not CIA_MAP_GEN.exists():
+    script = _find_cia_map_gen()
+    if script is None:
         return None
     out_path.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
-        "python3", str(CIA_MAP_GEN),
+        sys.executable, str(script),
         "--prompt", prompt,
         "--out", str(out_path),
     ]

@@ -13,6 +13,9 @@ venv/
 **/cache/
 *.cache
 
+# Per-install output-destination choice (written by --set-output-dir)
+skills/pdb-replica-gen/config.json
+
 # OS / editor
 .DS_Store
 Thumbs.db
