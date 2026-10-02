@@ -7,8 +7,9 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
-SCRIPTS = ROOT / "skills" / "pdb-replica-gen" / "scripts"
-SAMPLES = ROOT / "skills" / "pdb-replica-gen" / "assets" / "samples"
+SKILLS = ROOT / "plugins" / "pdb-skill" / "skills"
+SCRIPTS = SKILLS / "pdb-replica-gen" / "scripts"
+SAMPLES = SKILLS / "pdb-replica-gen" / "assets" / "samples"
 sys.path.insert(0, str(SCRIPTS))
 
 _EN = ("Reporting from several capitals indicates that the talks are "

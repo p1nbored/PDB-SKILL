@@ -18,7 +18,7 @@ htmlcov/
 
 # Local settings written by pre-2.0 installs (--set-output-dir); settings
 # now live in the plugin's userConfig
-skills/pdb-replica-gen/config.json
+**/pdb-replica-gen/config.json
 
 # OS / editor
 .DS_Store

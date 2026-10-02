@@ -7,7 +7,7 @@ from pathlib import Path
 
 MAP_TIMEOUT_S = 180
 
-# Both skills ship in the same plugin (skills/<name>/scripts/); a manual
+# Both skills ship in the same plugin (<plugin>/skills/<name>/scripts/); a manual
 # install under ~/.claude/skills keeps the same relative layout.
 _CANDIDATES = (
     Path(__file__).resolve().parents[2] / "cia-map-gen" / "scripts" / "cia_map_gen.py",

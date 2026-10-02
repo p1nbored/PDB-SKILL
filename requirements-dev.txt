@@ -1,5 +1,5 @@
--r skills/pdb-replica-gen/requirements.txt
--r skills/cia-map-gen/requirements.txt
+-r plugins/pdb-skill/skills/pdb-replica-gen/requirements.txt
+-r plugins/pdb-skill/skills/cia-map-gen/requirements.txt
 pytest>=8.0
 pytest-cov>=5.0
 pymupdf>=1.24

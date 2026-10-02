@@ -29,7 +29,8 @@ dependencies and installs them from the plugin's `requirements.txt`
 files; from a clone you can do it yourself:
 
 ```bash
-pip install -r skills/pdb-replica-gen/requirements.txt -r skills/cia-map-gen/requirements.txt
+pip install -r plugins/pdb-skill/skills/pdb-replica-gen/requirements.txt \
+            -r plugins/pdb-skill/skills/cia-map-gen/requirements.txt
 ```
 
 Chinese text needs a TrueType CJK font: SimSun (Windows), Songti
@@ -49,8 +50,9 @@ or invoke a skill directly: `/pdb-skill:pdb-replica-gen 2026-04-18`,
 To render the bundled sample without Claude:
 
 ```bash
-python skills/pdb-replica-gen/scripts/pdb_gen.py \
-    --content skills/pdb-replica-gen/assets/samples/2026-04-18.json --out-dir ./out
+python plugins/pdb-skill/skills/pdb-replica-gen/scripts/pdb_gen.py \
+    --content plugins/pdb-skill/skills/pdb-replica-gen/assets/samples/2026-04-18.json \
+    --out-dir ./out
 ```
 
 ## What the replica reproduces
@@ -77,36 +79,37 @@ Measured from the scans of September 9, 1976, July 28, 1976, and April
 ## Repository layout
 
 ```
-.claude-plugin/
-  plugin.json          plugin manifest and install-time settings
-  marketplace.json     single-plugin marketplace
-skills/
-  pdb-replica-gen/     the brief: SKILL.md, references/ (sourcing, style
-                       guide), scripts/ (renderer), assets/ (fonts, samples)
-  cia-map-gen/         the map plates: SKILL.md, scripts/
-tests/                 pytest suite for the brief renderer
-references/            development corpus: 30 declassified PDBs (1961-76)
-                       with per-page scans; not used at runtime
+.claude-plugin/marketplace.json   marketplace listing this repo's plugin
+plugins/pdb-skill/                the plugin (all that an install copies)
+  .claude-plugin/plugin.json      manifest and install-time settings
+  skills/pdb-replica-gen/         the brief: SKILL.md, references/ (sourcing,
+                                  style guide), scripts/, assets/ (fonts, samples)
+  skills/cia-map-gen/             the map plates: SKILL.md, scripts/
+tests/                            pytest suite for the brief renderer
+references/                       development corpus: 30 declassified PDBs
+                                  (1961-76) with per-page scans
 ```
 
 ## Development
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest tests --cov=skills/pdb-replica-gen/scripts
+python -m pytest tests --cov=plugins/pdb-skill/skills/pdb-replica-gen/scripts
 claude plugin validate --strict .
+claude plugin validate --strict plugins/pdb-skill
 ```
 
 The `references/` corpus is public-domain material from the CIA
 electronic reading room (CIA-RDP series; file names keep the original
-document IDs). It is what the layout was measured against and makes the
-repository clone about 170 MB.
+document IDs). It is what the layout was measured against. It stays
+outside the plugin folder, so installing the plugin copies about 1 MB;
+only the one-time marketplace clone (about 170 MB) includes it.
 
 ## Licenses and provenance
 
 - Bundled fonts: IBM Plex Mono, Courier Prime, and EB Garamond (subset
   to Latin), all under the SIL Open Font License 1.1; license texts are
-  in `skills/pdb-replica-gen/assets/fonts/`.
+  in `plugins/pdb-skill/skills/pdb-replica-gen/assets/fonts/`.
 - Map data: Natural Earth (public domain), downloaded on first use.
 - Output is a stylistic replica built from public news reporting. The
   PDF metadata marks it as a replica, not a government document.

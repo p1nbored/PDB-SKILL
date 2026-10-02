@@ -7,7 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 _SPEC = importlib.util.spec_from_file_location(
-    "cia_linework", ROOT / "skills" / "cia-map-gen" / "scripts" / "linework.py")
+    "cia_linework",
+    ROOT / "plugins" / "pdb-skill" / "skills" / "cia-map-gen" / "scripts" / "linework.py")
 linework = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(linework)
 

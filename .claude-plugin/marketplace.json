@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "pdb-skill",
-      "source": "./",
+      "source": "./plugins/pdb-skill",
       "description": "Bilingual 1975-76 President's Daily Brief replicas (PDF + Markdown) with CIA-style map plates."
     }
   ]
