@@ -88,9 +88,10 @@ plugins/pdb-skill/                the plugin (all that an install copies)
                                   style guide), scripts/, assets/ (fonts, samples)
   skills/cia-map-gen/             the map plates: SKILL.md, scripts/
 tests/                            pytest suite for the brief renderer
-references/                       development corpus: 30 declassified PDBs
-                                  (1961-76) with per-page scans
 ```
+
+The reference corpus -- 30 declassified PDBs (1961-76) with per-page
+scans -- lives on the separate `reference-corpus` branch.
 
 ## Development
 
@@ -101,11 +102,16 @@ claude plugin validate --strict .
 claude plugin validate --strict plugins/pdb-skill
 ```
 
-The `references/` corpus is public-domain material from the CIA
-electronic reading room (CIA-RDP series; file names keep the original
-document IDs). It is what the layout was measured against. It stays
-outside the plugin folder, so installing the plugin copies about 1 MB;
-only the one-time marketplace clone (about 170 MB) includes it.
+The layout was measured against the reference corpus: public-domain
+scans from the CIA electronic reading room (CIA-RDP series; file names
+keep the original document IDs). It is kept on the `reference-corpus`
+branch so that neither adding the marketplace nor installing the plugin
+downloads its 166 MB. To study it next to `master`:
+
+```bash
+git fetch origin reference-corpus
+git worktree add ../PDB-SKILL-corpus reference-corpus
+```
 
 ## Licenses and provenance
 

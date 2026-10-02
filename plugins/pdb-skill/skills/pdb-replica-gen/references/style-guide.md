@@ -1,8 +1,8 @@
 # Writing a 1975-76 PDB
 
 How the Ford-era briefs read and how the content JSON maps onto the
-printed page. Ground truth is the declassified corpus in the
-repository's `references/` folder, especially the issues of
+printed page. Ground truth is the declassified corpus on the
+repository's `reference-corpus` branch, especially the issues of
 September 9, 1976, July 28, 1976, and April 30, 1975.
 
 ## What the reader sees

@@ -1,7 +1,7 @@
 """Compose the PDB replica PDF with reportlab.
 
-Layout follows the 1975-76 booklets (ground truth in references/,
-especially DOC_0006466841 of September 9, 1976):
+Layout follows the 1975-76 booklets (ground truth on the repository's
+reference-corpus branch, especially DOC_0006466841 of September 9, 1976):
 
 - Cover, inside cover with the E.O. 11652 box, typewritten Table of
   Contents.

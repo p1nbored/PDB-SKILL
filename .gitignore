@@ -25,3 +25,7 @@ htmlcov/
 Thumbs.db
 .idea/
 .vscode/
+
+# Reference corpus lives on the reference-corpus branch; a local copy may
+# sit here for study but is not tracked on master
+/references/
