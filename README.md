@@ -3,13 +3,13 @@
 A Claude Code plugin that turns today's news into a replica of a
 1975-76 declassified **President's Daily Brief**: four to six items
 verified across outlets from at least four world regions, written in
-PDB voice, translated into Simplified Chinese, and typeset as a
-typewritten booklet PDF plus a Markdown twin, with grayscale CIA-style
-map plates.
+PDB voice, translated into Simplified Chinese, and typeset as a single
+typewritten booklet PDF with grayscale CIA-style map plates bound in.
+Markdown output is available on request.
 
 > 一个 Claude Code 插件：联网搜集多地区权威媒体的新闻，经多源校核与中文翻译后，
-> 生成与 1975-76 年解密版《总统每日情报简报》版式一致的双语 PDF 与 Markdown，
-> 并配套 CIA 风格的灰度参考地图。
+> 生成与 1975-76 年解密版《总统每日情报简报》版式一致的双语 PDF，
+> CIA 风格的灰度参考地图直接嵌入其中（可按需输出 Markdown）。
 
 ## Install
 
@@ -20,9 +20,11 @@ In Claude Code:
 /plugin install pdb-skill@pdb-skill
 ```
 
-The install dialog asks for an **output folder** (default `~/pdb-output`;
-an Obsidian vault folder works) and a **primary format** (`pdf` or
-`markdown`). Change them later with `/plugin configure pdb-skill@pdb-skill`.
+The install dialog asks for an **output folder** (default `~/pdb-output`)
+and an **output format**: `pdf` (default, one PDF per brief with the maps
+embedded), `markdown` (Obsidian Markdown plus the `maps/` folder it links
+to), or `both`. Change them later with `/plugin configure pdb-skill@pdb-skill`.
+Map images are saved as separate files only when you ask for them.
 
 The skills run Python 3.10+. On first use Claude checks for the Python
 dependencies and installs them from the plugin's `requirements.txt`

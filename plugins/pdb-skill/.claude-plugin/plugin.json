@@ -1,8 +1,8 @@
 {
   "name": "pdb-skill",
   "displayName": "PDB Skill",
-  "version": "2.0.0",
-  "description": "Builds replicas of the 1975-76 declassified President's Daily Brief from today's news: multi-source, bilingual (English and Simplified Chinese) briefs typeset as a typewritten booklet PDF plus a Markdown twin, with grayscale CIA-style map plates.",
+  "version": "2.1.0",
+  "description": "Builds replicas of the 1975-76 declassified President's Daily Brief from today's news: multi-source, bilingual (English and Simplified Chinese) briefs typeset as a typewritten booklet PDF with grayscale CIA-style map plates embedded. Markdown output is optional.",
   "author": {
     "name": "p1nbored",
     "url": "https://github.com/p1nbored"
@@ -25,14 +25,14 @@
     "output_dir": {
       "type": "directory",
       "title": "Output folder",
-      "description": "Where briefs are written (PDB_<date>.pdf, PDB_<date>.md, PDB_<date>.json and a maps/ folder). An Obsidian vault folder works well when Markdown is the primary format.",
+      "description": "Where briefs are written. By default each brief is a single PDB_<date>.pdf; an Obsidian vault folder works well if you choose Markdown.",
       "default": "~/pdb-output"
     },
-    "primary_format": {
+    "output_format": {
       "type": "string",
-      "title": "Primary format",
-      "description": "pdf: the print-faithful 1975-76 replica. markdown: Obsidian-flavored Markdown (frontmatter, wikilinks, callouts, image embeds). Both files are written either way; this sets which is reported first and the Markdown flavor.",
-      "options": ["pdf", "markdown"],
+      "title": "Output format",
+      "description": "pdf: the 1975-76 replica as one PDF, map plates embedded. markdown: Obsidian-flavored Markdown plus the maps/ folder it links to. both: the PDF and the Markdown.",
+      "options": ["pdf", "markdown", "both"],
       "default": "pdf"
     }
   }

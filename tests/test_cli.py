@@ -3,18 +3,66 @@ from __future__ import annotations
 
 import json
 
+import fitz
 import pytest
+from PIL import Image
 
 import map_integration
 import pdb_gen
 
+PDF, MD = "PDB_2026-04-18.pdf", "PDB_2026-04-18.md"
 
-def test_writes_pdf_and_markdown(tmp_path, sample_path):
-    rc = pdb_gen.main(["--content", str(sample_path), "--out-dir", str(tmp_path),
-                       "--no-maps"])
+
+@pytest.fixture
+def fake_maps(monkeypatch):
+    """Stand-in for cia-map-gen that writes a small PNG where asked."""
+    def _render(prompt, out, title=None, no_header=True):
+        out.parent.mkdir(parents=True, exist_ok=True)
+        Image.new("L", (85, 110), 200).save(out)
+        return out
+
+    monkeypatch.setattr(pdb_gen, "generate_map", _render)
+
+
+def test_default_writes_only_the_pdf(tmp_path, sample_path, fake_maps):
+    rc = pdb_gen.main(["--content", str(sample_path), "--out-dir", str(tmp_path)])
     assert rc == 0
-    assert (tmp_path / "PDB_2026-04-18.pdf").exists()
-    assert (tmp_path / "PDB_2026-04-18.md").exists()
+    assert sorted(p.name for p in tmp_path.iterdir()) == [PDF]
+
+
+def test_maps_are_embedded_in_the_pdf(tmp_path, sample_path, fake_maps):
+    pdb_gen.main(["--content", str(sample_path), "--out-dir", str(tmp_path)])
+    doc = fitz.open(tmp_path / PDF)
+    assert sum(len(page.get_images()) for page in doc) >= 6
+
+
+def test_maps_dir_keeps_the_map_images(tmp_path, sample_path, fake_maps):
+    keep = tmp_path / "plates"
+    rc = pdb_gen.main(["--content", str(sample_path), "--out-dir", str(tmp_path / "out"),
+                       "--maps-dir", str(keep)])
+    assert rc == 0
+    assert len(list(keep.glob("*.png"))) == 6
+    assert sorted(p.name for p in (tmp_path / "out").iterdir()) == [PDF]
+
+
+def test_format_markdown_writes_obsidian_md_with_its_maps(tmp_path, sample_path,
+                                                          fake_maps):
+    rc = pdb_gen.main(["--content", str(sample_path), "--out-dir", str(tmp_path),
+                       "--format", "markdown"])
+    assert rc == 0
+    md = (tmp_path / MD).read_text(encoding="utf-8")
+    assert md.startswith("---\n")
+    assert not (tmp_path / PDF).exists()
+    assert len(list((tmp_path / "maps").glob("*.png"))) == 6
+
+
+def test_format_both_writes_pdf_and_markdown(tmp_path, sample_path, fake_maps):
+    rc = pdb_gen.main(["--content", str(sample_path), "--out-dir", str(tmp_path),
+                       "--format", "both", "--md-flavor", "gfm"])
+    assert rc == 0
+    assert (tmp_path / PDF).exists()
+    md = (tmp_path / MD).read_text(encoding="utf-8")
+    assert "*(Page 1)*" in md and not md.startswith("---\n")
 
 
 def test_unexpanded_user_config_falls_back_to_defaults(tmp_path, sample_path,
@@ -22,19 +70,10 @@ def test_unexpanded_user_config_falls_back_to_defaults(tmp_path, sample_path,
     monkeypatch.setattr(pdb_gen, "DEFAULT_OUT_DIR", tmp_path / "default")
     rc = pdb_gen.main(["--content", str(sample_path), "--no-maps",
                        "--out-dir", "${user_config.output_dir}",
-                       "--primary", "${user_config.primary_format}"])
+                       "--format", "${user_config.output_format}"])
     assert rc == 0
-    assert (tmp_path / "default" / "PDB_2026-04-18.pdf").exists()
-    assert "PDF written (primary)" in capsys.readouterr().out
-
-
-def test_markdown_primary_emits_obsidian(tmp_path, sample_path):
-    rc = pdb_gen.main(["--content", str(sample_path), "--out-dir", str(tmp_path),
-                       "--no-maps", "--no-pdf", "--primary", "markdown"])
-    assert rc == 0
-    md = (tmp_path / "PDB_2026-04-18.md").read_text(encoding="utf-8")
-    assert md.startswith("---\n")
-    assert not (tmp_path / "PDB_2026-04-18.pdf").exists()
+    assert sorted(p.name for p in (tmp_path / "default").iterdir()) == [PDF]
+    assert "PDF written" in capsys.readouterr().out
 
 
 def test_missing_content_file_exits_2(tmp_path):
@@ -48,9 +87,9 @@ def test_invalid_content_exits_2(tmp_path):
     assert pdb_gen.main(["--content", str(bad), "--out-dir", str(tmp_path)]) == 2
 
 
-def test_nothing_to_generate_is_a_usage_error(tmp_path, sample_path):
+def test_unknown_format_is_a_usage_error(tmp_path, sample_path):
     with pytest.raises(SystemExit) as exc:
-        pdb_gen.main(["--content", str(sample_path), "--no-pdf", "--no-md"])
+        pdb_gen.main(["--content", str(sample_path), "--format", "docx"])
     assert exc.value.code == 2
 
 

@@ -9,7 +9,7 @@
     {
       "name": "pdb-skill",
       "source": "./plugins/pdb-skill",
-      "description": "Bilingual 1975-76 President's Daily Brief replicas (PDF + Markdown) with CIA-style map plates."
+      "description": "Bilingual 1975-76 President's Daily Brief replicas as one PDF with CIA-style map plates embedded."
     }
   ]
 }
