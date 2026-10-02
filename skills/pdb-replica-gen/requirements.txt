@@ -1,2 +1,3 @@
 reportlab>=4.0
 pillow>=10.0
+pyphen>=0.14

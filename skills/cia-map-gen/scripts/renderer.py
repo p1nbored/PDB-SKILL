@@ -24,6 +24,7 @@ from cartopy.feature import NaturalEarthFeature
 from cartopy.io import shapereader
 
 from data_loader import load_layer
+import linework
 import styles as S
 
 
@@ -510,24 +511,26 @@ def render(
     )
     ax.add_feature(rivers_feat, linewidth=0.35, zorder=4)
 
-    # Roads and railroads — thin black linework with a Road/Railroad
-    # legend, prominent on the reference plates. Degrade gracefully if
-    # the Natural Earth layers cannot be fetched.
-    try:
-        roads_feat = NaturalEarthFeature(
-            category="cultural", name="roads", scale="10m",
-            facecolor="none", edgecolor="black",
-        )
-        ax.add_feature(roads_feat, linewidth=S.LW_ROAD, zorder=4)
-        rail_feat = NaturalEarthFeature(
-            category="cultural", name="railroads", scale="10m",
-            facecolor="none", edgecolor="black",
-        )
-        ax.add_feature(rail_feat, linewidth=S.LW_RAIL,
-                       linestyle=(0, (2, 1)), zorder=4)
-    except Exception as e:  # noqa: BLE001
-        print(f"[cia-map-gen] roads/railroads unavailable ({e})",
-              file=sys.stderr)
+    # Roads and railroads -- trunk routes only, as on the 1976 plates,
+    # with a Road/Railroad legend. Degrade gracefully if the Natural
+    # Earth layers cannot be fetched.
+    road_rank, rail_rank = linework.rank_limits(view_bbox)
+    for layer, rank, style in (
+        ("roads", road_rank, {"linewidth": S.LW_ROAD}),
+        ("railroads", rail_rank, {"linewidth": S.LW_RAIL,
+                                  "linestyle": (0, (2, 1))}),
+    ):
+        try:
+            path = shapereader.natural_earth(resolution="10m",
+                                             category="cultural", name=layer)
+            geoms = linework.select(shapereader.Reader(path).records(),
+                                    view_bbox, rank)
+        except Exception as e:  # noqa: BLE001
+            print(f"[cia-map-gen] {layer} unavailable ({e})", file=sys.stderr)
+            continue
+        if geoms:
+            ax.add_geometries(geoms, crs=ccrs.PlateCarree(), facecolor="none",
+                              edgecolor="black", zorder=4, **style)
 
     # Borders with dashed-for-disputed handling.
     _draw_boundary_lines(ax, view_bbox)

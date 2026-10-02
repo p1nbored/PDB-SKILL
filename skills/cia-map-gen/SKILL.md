@@ -1,94 +1,63 @@
 ---
 name: cia-map-gen
-description: Generate CIA-style declassified reference map PNGs from a natural-language geographic prompt. Use when the user asks for a "CIA map", "declassified map", "reference map image", or "make a map of <place>". The output is a grayscale matplotlib PNG matching the 1970s CIA PDB map plates - country labels, city dots and star capitals, road/railroad linework, italic sea labels, a legend cartouche with Road/Railroad samples and miles+km scale bars, a boundary disclaimer, a publication number under the frame, and an optional declassification header/footer.
+description: Renders a grayscale reference map in the style of the 1970s CIA President's Daily Brief map plates from a plain-language place description - framed sheet with bold country names, star capitals, trunk roads and railroads, italic sea names, a legend box with Road/Railroad samples and miles/kilometers scales, the boundary disclaimer, and a publication number. Use when the user asks for a CIA-style, declassified-style, or PDB-style map, or a black-and-white reference map of a country or region. Also called by pdb-replica-gen for its map plates.
+argument-hint: "<place, e.g. 'Horn of Africa' or 'Israel Jordan Lebanon'>"
 ---
 
 # CIA-Style Map Generator
 
-## When to use this skill
-Trigger on phrases like:
-- "make me a CIA-style map of ..."
-- "generate a declassified map of ..."
-- "draw a black-and-white reference map of ..."
-- "CIA map of <region/country>"
-- "PDB-style map ..."
+Turns a geographic prompt into a letter-size, 200 dpi PNG that matches
+the map plates bound into the 1975-76 briefs (Rhodesia 620402 9-76,
+Egypt 620375 8-76): black linework on white, a heavy frame with bare
+graticule numerals, and a legend box in the lower left.
 
-## Command
+## Run
+
+If `python3 -c "import cartopy, matplotlib"` fails, do the
+[first-run install](#first-run) first. On Windows use `python` (or
+`py -3`) in place of `python3`.
+
 ```bash
-python3 ~/.claude/skills/cia-map-gen/cia_map_gen.py \
-    --prompt "<geographic prompt>" \
-    [--out <output.png>] \
-    [--title "<title text>"] \
-    [--no-header]
+python3 "${CLAUDE_SKILL_DIR}/scripts/cia_map_gen.py" \
+    --prompt "<place>" --out "<file.png>" [--title "<legend title>"]
 ```
 
-First run will download ~7 MB of Natural Earth public-domain GeoJSON into
-`~/.cache/cia-map-gen/`. Subsequent runs are offline.
+Pick the output path from the user's request; otherwise write to the
+current directory. Report the path printed on stdout.
 
-## Examples
+| Flag | Effect |
+|------|--------|
+| `--prompt` | Required. Countries ("Israel Jordan Lebanon"), a named region, or a historical name ("Rhodesia", "Burma", "Persia") |
+| `--out` | PNG path (default `./cia_map_<slug>_<timestamp>.png`) |
+| `--title` | Bold title in the legend box, e.g. "LEBANON -- Ceasefire Line" |
+| `--topo` | Grayscale shaded relief inside the focus countries |
+| `--marker LON,LAT,LABEL[,STYLE]` | Extra marker; style is star, triangle, diamond, square, or dot; repeatable |
+| `--no-header` | Omit the release line printed above and below the sheet |
+| `--download` | Fetch and cache the map data, then exit |
+
+Named regions: Middle East, Horn of Africa, Southeast Asia, Central
+America, Scandinavia, Balkans, Southern Africa, Maghreb, Caucasus,
+Indochina, Korean Peninsula, Red Sea, Persian Gulf, Taiwan Strait,
+South China Sea, Sahel, Andean Ridge, Eastern Europe.
+
+Exit codes: 0 written, 2 prompt not resolved (stderr lists the closest
+matches; retry with a country name), 3 map data unavailable.
+
+## First run
+
 ```bash
-# Egypt and the Red Sea (matches page_011.png aesthetic)
-python3 ~/.claude/skills/cia-map-gen/cia_map_gen.py \
-    --prompt "Egypt and the Red Sea" --out /tmp/egypt.png
-
-# Israel / Jordan / Lebanon (matches page_006.png)
-python3 ~/.claude/skills/cia-map-gen/cia_map_gen.py \
-    --prompt "Israel Jordan Lebanon" --out /tmp/levant.png
-
-# Historical name aliasing (Rhodesia -> Zimbabwe region, page_005.png)
-python3 ~/.claude/skills/cia-map-gen/cia_map_gen.py \
-    --prompt "Rhodesia and surrounding states" --out /tmp/rhodesia.png
-
-# Named region shortcut
-python3 ~/.claude/skills/cia-map-gen/cia_map_gen.py \
-    --prompt "Horn of Africa" --out /tmp/horn.png
+python3 -m pip install -r "${CLAUDE_SKILL_DIR}/requirements.txt"
 ```
 
-## How it works
-1. **Geocode.** `geocoder.py` matches prompt tokens against Natural Earth
-   admin_0 country attributes (NAME, NAME_LONG, ADMIN, ISO_A2/A3) and a
-   small historical-alias + named-region dictionary.
-2. **Compute bbox.** Union of matched country geometries, padded 15%.
-3. **Render.** `renderer.py` draws grayscale countries, lakes, rivers,
-   roads and railroads, italic marine labels, city dots with star
-   capitals, a legend cartouche (optional bold title, Road/Railroad
-   line samples, miles + km scale bars), the "BOUNDARY REPRESENTATION
-   IS NOT NECESSARILY AUTHORITATIVE" disclaimer, a CIA-style
-   publication number below the frame (e.g. "620402 9-76"), a black
-   frame with bare graticule numerals, and an optional CIA-RDP
-   declassification header/footer.
-4. **Output.** PNG at 200 DPI, portrait, ~8.5×11 in.
+The first map downloads Natural Earth public-domain data (a few MB per
+layer, cached under `~/.local/share/cartopy` and `~/.cache/cia-map-gen`);
+later runs are offline.
 
-## Exit codes
-- `0` — success, image written.
-- `2` — prompt could not be resolved (stderr lists closest matches).
-- `3` — Natural Earth data could not be fetched or loaded.
+## Limits
 
-## Flags
-- `--prompt` (required) free-form geographic description.
-- `--out` output PNG path. Default: `./cia_map_<slug>_<ts>.png`.
-- `--title` optional bold title inside the legend cartouche (boxed,
-  as on the Egypt reference plate).
-- `--no-header` omit the declassification header/footer strings.
-- `--download` pre-cache Natural Earth data and exit.
-
-## Files
-```
-~/.claude/skills/cia-map-gen/
-├── SKILL.md              # this file
-├── cia_map_gen.py        # CLI entry
-├── renderer.py           # matplotlib drawing
-├── geocoder.py           # prompt → countries + bbox
-├── data_loader.py        # NE geojson fetch + cache
-├── styles.py             # fonts, line widths, colors
-├── aliases.py            # historical names, named regions
-├── README.md             # usage + tech notes
-└── requirements.txt      # matplotlib (pre-installed on most systems)
-```
-
-## Limitations
-- Roads/railroads come from Natural Earth 10m (cartopy fetches and
-  caches them on first use); coverage is modern, not period.
-- Historical borders are approximated via modern equivalents; see
-  `aliases.py` for the substitutions applied (Rhodesia→Zimbabwe, etc.).
-- Very small countries/dependencies may be unlabeled to avoid clutter.
+- Borders, roads, and railroads are modern Natural Earth data, not the
+  period network; historical names map to their modern successors
+  (`scripts/aliases.py`).
+- Road and rail density is cut to trunk routes, tighter for wider
+  views (`scripts/linework.py`).
+- Very small states may go unlabeled to avoid clutter.

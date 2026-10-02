@@ -41,11 +41,13 @@
       "body_en": [
         "Russian forces conducted a combined missile and drone strike across Kyiv, Dnipro, and Odesa on the night of 15-16 April that Ukrainian authorities say killed at least sixteen and injured roughly one hundred. Residential districts took the bulk of the damage, in a pattern consistent with shaping operations rather than pure terror targeting.",
         "Kyiv has responded by intensifying long-range strikes against Russian energy infrastructure. Ukrainian drones have struck each of Russia's three principal western crude export terminals this month, and the Tuapse refinery — among Russia's ten largest — sustained damage on 12 April. Open-source overhead imagery shows a sustained reduction in Russian refining throughput.",
+        "[REDACTED:4]",
         "Russia's spring offensive is generating tactical momentum in select Donbas sectors but has not demonstrated a capability to seize the balance of the region within 2026. Ukrainian general-staff statements allege around 400 incidents of Russian chemical-agent use in March alone; we have medium confidence in the aggregate reporting and are working to corroborate individual events."
       ],
       "body_cn": [
         "俄军于4月15日至16日夜间对基辅、第聂伯罗和敖德萨发动导弹与无人机联合打击,乌方称至少16人死亡,约100人受伤。住宅区承受了主要破坏,其模式更符合塑造性作战,而非单纯的恐怖打击。",
         "基辅方面以加大对俄能源基础设施的远程打击作为回应。本月乌克兰无人机已先后袭击俄罗斯西部三大主要原油出口码头,位列俄罗斯前十大炼油厂之一的图阿普谢炼油厂也于4月12日受损。开源卫星图像显示,俄罗斯炼油产能持续下降。",
+        "[REDACTED:4]",
         "俄军春季攻势在顿巴斯部分地段取得战术进展,但尚未显示出在2026年内攻占该地区其余部分的能力。乌军总参谋部称,仅3月就记录约400起俄军使用化学战剂事件;我们对总体数据持中等信心,正核实个案。"
       ],
       "sources": [
@@ -147,22 +149,30 @@
   ],
   "notes": [
     {
-      "region": "Pope Leo in Cameroon",
+      "region": "Cameroon",
+      "summary_en": "Pope Leo used a mass rally in Cameroon to urge rejection of political violence.",
+      "summary_cn": "教皇良借喀麦隆大型弥撒呼吁民众拒绝政治暴力。",
       "text_en": "Pope Leo drew a crowd of roughly 120,000 at an open-air Mass in Douala on 17 April, using the homily to urge rejection of political violence. The Vatican visit is being read in Yaoundé as implicit pressure on anglophone-separatist militants ahead of October elections.",
       "text_cn": "4月17日,教皇良在杜阿拉的露天弥撒吸引约12万人出席,他在讲道中敦促拒绝政治暴力。雅温得方面将此次梵蒂冈之访解读为10月选举前对英语分离主义武装分子的隐性施压。"
     },
     {
       "region": "China-Iran",
+      "summary_en": "Beijing weighed a radar transfer to Tehran after the war began, then shelved it.",
+      "summary_cn": "开战后北京曾考虑向德黑兰转让雷达系统，随后搁置。",
       "text_en": "US signals intercepts indicate that following the opening of Operation Epic Fury, Beijing internally weighed — but declined — to transfer advanced radar suites to Tehran. We assess the restraint is cost-driven rather than strategic and could shift if the Hormuz arrangement collapses.",
       "text_cn": "美方信号情报显示,'史诗雷霆'行动开始后,北京曾内部权衡——但未实施——向德黑兰转让先进雷达系统。我们评估这一克制出于成本而非战略考量,一旦霍尔木兹安排破裂可能转向。"
     },
     {
       "region": "Venezuela",
+      "summary_en": "Venezuela has shifted air defenses toward its industrial heartland, not toward Guyana.",
+      "summary_cn": "委内瑞拉将防空部队调往工业腹地，而非指向圭亚那。",
       "text_en": "Caracas has redeployed two air-defense battalions toward the Orinoco industrial belt over the past seventy-two hours, consistent with preparation for renewed US Treasury enforcement actions rather than an offensive posture toward Guyana.",
       "text_cn": "过去72小时,加拉加斯将两个防空营重新部署至奥里诺科工业带,符合对美国财政部新一轮执行行动的准备,而非针对圭亚那的进攻态势。"
     },
     {
       "region": "South Africa",
+      "summary_en": "South Africa's governing coalition should survive next week's confidence vote.",
+      "summary_cn": "南非执政联盟预计将挺过下周的不信任投票。",
       "text_en": "The ANC-DA coalition is likely to survive next week's no-confidence vote, but the finance ministry portfolio is expected to change hands; markets have priced a mild rand sell-off against that outcome.",
       "text_cn": "非国大与民主联盟组建的执政联盟很可能挺过下周的不信任投票,但财政部职务预计易手;市场已针对该结果对兰特计入小幅抛压。"
     }
@@ -170,6 +180,8 @@
   "annex": {
     "title_en": "IRAN AFTER KHAMENEI: POLITICAL SUCCESSION AND REGIONAL POSTURE",
     "title_cn": "附录:哈梅内伊之后的伊朗——政治继承与地区态势",
+    "summary_en": "Khamenei's death has left Iran in the hands of an improvised three-member council. We expect it to hold through 2026 while it narrows the war, rebuilds the IRGC, and copes with a failing economy; its proxies abroad are already weaker.",
+    "summary_cn": "哈梅内伊身亡后，伊朗由一个临时拼凑的三人议会掌权。我们预计该议会将维持至2026年底，其间收缩战事、重建伊斯兰革命卫队并应对濒临崩溃的经济；其海外代理网络已明显削弱。",
     "map_prompt": "Iran",
     "map_title": "IRAN — Regime Nodes",
     "body_en": [

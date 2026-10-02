@@ -1,0 +1,39 @@
+{
+  "name": "pdb-skill",
+  "displayName": "PDB Skill",
+  "version": "2.0.0",
+  "description": "Builds replicas of the 1975-76 declassified President's Daily Brief from today's news: multi-source, bilingual (English and Simplified Chinese) briefs typeset as a typewritten booklet PDF plus a Markdown twin, with grayscale CIA-style map plates.",
+  "author": {
+    "name": "p1nbored",
+    "url": "https://github.com/p1nbored"
+  },
+  "homepage": "https://github.com/p1nbored/PDB-SKILL",
+  "repository": "https://github.com/p1nbored/PDB-SKILL",
+  "keywords": [
+    "pdb",
+    "presidents-daily-brief",
+    "intelligence-brief",
+    "news",
+    "bilingual",
+    "chinese",
+    "pdf",
+    "markdown",
+    "obsidian",
+    "maps"
+  ],
+  "userConfig": {
+    "output_dir": {
+      "type": "directory",
+      "title": "Output folder",
+      "description": "Where briefs are written (PDB_<date>.pdf, PDB_<date>.md, PDB_<date>.json and a maps/ folder). An Obsidian vault folder works well when Markdown is the primary format.",
+      "default": "~/pdb-output"
+    },
+    "primary_format": {
+      "type": "string",
+      "title": "Primary format",
+      "description": "pdf: the print-faithful 1975-76 replica. markdown: Obsidian-flavored Markdown (frontmatter, wikilinks, callouts, image embeds). Both files are written either way; this sets which is reported first and the Markdown flavor.",
+      "options": ["pdf", "markdown"],
+      "default": "pdf"
+    }
+  }
+}

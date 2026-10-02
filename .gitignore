@@ -7,13 +7,17 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Generated artifacts
 **/out/
 **/cache/
 *.cache
 
-# Per-install output-destination choice (written by --set-output-dir)
+# Local settings written by pre-2.0 installs (--set-output-dir); settings
+# now live in the plugin's userConfig
 skills/pdb-replica-gen/config.json
 
 # OS / editor

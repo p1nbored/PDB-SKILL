@@ -1,0 +1,15 @@
+{
+  "name": "pdb-skill",
+  "description": "President's Daily Brief replica tools for Claude Code.",
+  "owner": {
+    "name": "p1nbored",
+    "url": "https://github.com/p1nbored"
+  },
+  "plugins": [
+    {
+      "name": "pdb-skill",
+      "source": "./",
+      "description": "Bilingual 1975-76 President's Daily Brief replicas (PDF + Markdown) with CIA-style map plates."
+    }
+  ]
+}

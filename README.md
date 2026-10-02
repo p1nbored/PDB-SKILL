@@ -1,108 +1,112 @@
-# PDB Skill Pack / 总统每日情报简报 制作技能包
+# PDB Skill
 
-A pair of Claude Code skills that together produce a 1:1 replica of a
-1970s declassified **President's Daily Brief (PDB)** as a bilingual
-(English + Simplified Chinese) PDF plus a Markdown rendition — each
-with a map index — with grayscale CIA-style reference maps embedded
-automatically.
+A Claude Code plugin that turns today's news into a replica of a
+1975-76 declassified **President's Daily Brief**: four to six items
+verified across outlets from at least four world regions, written in
+PDB voice, translated into Simplified Chinese, and typeset as a
+typewritten booklet PDF plus a Markdown twin, with grayscale CIA-style
+map plates.
 
-> 一套 Claude Code 技能：可联网搜集多家权威媒体的新闻，
-> 经多源校核与中文翻译后，生成与解密版《总统每日情报简报》排版一致的双语
-> PDF 与 Markdown 双格式输出（均含地图索引），
-> 并自动配套 CIA 风格的灰度参考地图。
+> 一个 Claude Code 插件：联网搜集多地区权威媒体的新闻，经多源校核与中文翻译后，
+> 生成与 1975-76 年解密版《总统每日情报简报》版式一致的双语 PDF 与 Markdown，
+> 并配套 CIA 风格的灰度参考地图。
 
----
+## Install
+
+In Claude Code:
+
+```
+/plugin marketplace add p1nbored/PDB-SKILL
+/plugin install pdb-skill@pdb-skill
+```
+
+The install dialog asks for an **output folder** (default `~/pdb-output`;
+an Obsidian vault folder works) and a **primary format** (`pdf` or
+`markdown`). Change them later with `/plugin configure pdb-skill@pdb-skill`.
+
+The skills run Python 3.10+. On first use Claude checks for the Python
+dependencies and installs them from the plugin's `requirements.txt`
+files; from a clone you can do it yourself:
+
+```bash
+pip install -r skills/pdb-replica-gen/requirements.txt -r skills/cia-map-gen/requirements.txt
+```
+
+Chinese text needs a TrueType CJK font: SimSun (Windows), Songti
+(macOS), or `fonts-arphic-uming` / `fonts-wqy-microhei` (Linux).
+
+## Use
+
+Ask in plain language:
+
+- *"Build me a PDB for today"* / *"生成今天的总统每日情报简报"*
+- *"A PDB focused on the Middle East"*
+- *"Make a CIA-style map of the Horn of Africa"*
+
+or invoke a skill directly: `/pdb-skill:pdb-replica-gen 2026-04-18`,
+`/pdb-skill:cia-map-gen Taiwan Strait`.
+
+To render the bundled sample without Claude:
+
+```bash
+python skills/pdb-replica-gen/scripts/pdb_gen.py \
+    --content skills/pdb-replica-gen/assets/samples/2026-04-18.json --out-dir ./out
+```
+
+## What the replica reproduces
+
+Measured from the scans of September 9, 1976, July 28, 1976, and April
+30, 1975:
+
+- Cover with the CIA seal on a black square, Garamond title, italic
+  date, copy number, struck-through "Top Secret" with a 25X1 stamp, and
+  the empty control-line box; the E.O. 11652 box on the inside cover.
+- Typewritten Table of Contents with underlined region labels, hanging
+  indents, and italic "(Page N)" references.
+- Articles in the hanging two-column grid: `REGION:` and an italic
+  lead-in two lines above a 34-character body column, Letter
+  Gothic-style typewriter face, hyphenated ragged-right lines, double
+  spaces after sentences, `*  *  *` between items, and `--continued`
+  at the foot of each page.
+- NOTES with underlined country words in the lead-ins; an annex with an
+  italic abstract, A-numbered pages, and the ANNEX edge tab.
+- "FOR THE PRESIDENT ONLY" banners, release lines, sanitized passages
+  as ruled boxes stamped 25X1, and map plates bound in after the page
+  that cites them.
 
 ## Repository layout
 
 ```
-.
-├── README.md             # this file
-├── .gitignore
-├── skills/               # installable skills (one directory per skill)
-│   ├── cia-map-gen/      # grayscale CIA-style reference map generator
-│   │   ├── SKILL.md      # canonical skill manifest (frontmatter: name, description)
-│   │   ├── README.md
-│   │   ├── HOW_TO_USE.md
-│   │   ├── requirements.txt
-│   │   └── *.py
-│   └── pdb-replica-gen/  # bilingual PDB PDF generator (depends on cia-map-gen)
-│       ├── SKILL.md
-│       ├── README.md
-│       ├── source_guidance.md
-│       ├── requirements.txt
-│       ├── samples/      # pre-built bilingual briefs (JSON)
-│       └── *.py
-└── references/           # development-time reference corpus (NOT required at runtime)
-    ├── README.md
-    ├── index.json
-    ├── *.pdf             # 30 declassified PDB documents
-    ├── screenshots/      # per-page PNG renderings
-    └── map_sample/       # PDB map plates used as aesthetic anchors
+.claude-plugin/
+  plugin.json          plugin manifest and install-time settings
+  marketplace.json     single-plugin marketplace
+skills/
+  pdb-replica-gen/     the brief: SKILL.md, references/ (sourcing, style
+                       guide), scripts/ (renderer), assets/ (fonts, samples)
+  cia-map-gen/         the map plates: SKILL.md, scripts/
+tests/                 pytest suite for the brief renderer
+references/            development corpus: 30 declassified PDBs (1961-76)
+                       with per-page scans; not used at runtime
 ```
 
-Each subdirectory of `skills/` is a self-contained Claude Code skill
-following the standard skill convention: a `SKILL.md` with YAML
-frontmatter (`name`, `description`) plus the code/assets it needs. The
-skills run standalone — `references/` was used **only during
-development** to match the typography and map aesthetics of the
-declassified originals, and can be deleted or ignored after install.
-
-## Skills
-
-| Skill | What it does |
-|-------|--------------|
-| [`skills/cia-map-gen`](skills/cia-map-gen/SKILL.md) | Renders grayscale CIA-PDB-style reference map PNGs (legend cartouche, roads/railroads, star capitals, publication number) from a natural-language geographic prompt. |
-| [`skills/pdb-replica-gen`](skills/pdb-replica-gen/SKILL.md) | Builds a bilingual EN/CN PDB replica as PDF + Markdown, each with a map index; calls `cia-map-gen` for embedded maps. |
-
-`pdb-replica-gen` invokes `cia-map-gen`, so install both.
-
-## Install
-
-Copy each skill directory into your Claude Code skills directory:
+## Development
 
 ```bash
-# user-level install (recommended)
-mkdir -p ~/.claude/skills
-cp -r skills/cia-map-gen     ~/.claude/skills/
-cp -r skills/pdb-replica-gen ~/.claude/skills/
-
-# install Python dependencies
-pip install --break-system-packages -r ~/.claude/skills/cia-map-gen/requirements.txt
-pip install --break-system-packages -r ~/.claude/skills/pdb-replica-gen/requirements.txt
-
-# choose where generated briefs land + which format is primary (persisted)
-python3 ~/.claude/skills/pdb-replica-gen/pdb_gen.py \
-    --set-output-dir ~/pdb-output --set-primary-format pdf
+pip install -r requirements-dev.txt
+python -m pytest tests --cov=skills/pdb-replica-gen/scripts
+claude plugin validate --strict .
 ```
 
-Or tell your Claude Code agent: *"install the skills in this repo"* — it
-will read `SKILL.md` in each subdirectory and place them correctly.
-During an agent-driven install, the agent pops up a selectable prompt
-asking (1) where briefs should land (`~/pdb-output`,
-`~/Documents/PDB-Briefs`, `./pdb-output`, or a custom path typed under
-"Other" — e.g. an Obsidian vault folder) and (2) whether **PDF** or
-**Markdown** is the primary output format. Both answers persist via
-`--set-output-dir` / `--set-primary-format`. Markdown-primary output
-is Obsidian-flavored (frontmatter properties, wikilink anchors,
-callout lead-ins, `![[map.png]]` embeds) so the brief plus its `maps/`
-folder can be dropped straight into a vault.
+The `references/` corpus is public-domain material from the CIA
+electronic reading room (CIA-RDP series; file names keep the original
+document IDs). It is what the layout was measured against and makes the
+repository clone about 170 MB.
 
-## Usage
+## Licenses and provenance
 
-Once installed, trigger the skills in natural language:
-
-- **Map only:** *"make me a CIA-style map of the Horn of Africa"*
-- **Full brief:** *"build me a PDB for today"* or *"生成今天的总统每日情报简报"*
-
-See each skill's own `SKILL.md` for the full trigger phrases, flags,
-and exit codes.
-
-## References (development-only)
-
-The `references/` directory ships the declassified PDB corpus that was
-used **only during development** to design the skills against real
-visual targets. It is **not** copied into `~/.claude/skills/` and the
-skills do not read from it at runtime. Keep it if you want to study
-the originals or extend the skills; delete it freely otherwise. See
-[`references/README.md`](references/README.md) for the corpus index.
+- Bundled fonts: IBM Plex Mono, Courier Prime, and EB Garamond (subset
+  to Latin), all under the SIL Open Font License 1.1; license texts are
+  in `skills/pdb-replica-gen/assets/fonts/`.
+- Map data: Natural Earth (public domain), downloaded on first use.
+- Output is a stylistic replica built from public news reporting. The
+  PDF metadata marks it as a replica, not a government document.
